@@ -2,7 +2,7 @@
   <el-sub-menu 
     v-for="division in organization.children" 
     :key="division.id" 
-    :index="division.id" 
+    :index="division.id.toString()" 
     :class="{'root': root, 'no-children': !division.children?.length}"
     class="org-tree"
   >
@@ -67,13 +67,15 @@ const cancelEditing = (division: IDivision) => {
 };
 </script>
 
+<style lang="scss">
+.el-sub-menu.no-children .el-sub-menu__icon-arrow {
+  display: none;
+}
+</style>
+
 <style lang="scss" scoped>
 .el-sub-menu {
   --el-menu-base-level-padding: 10px; /* Новое значение */
-}
-
-.el-sub-menu.no-children .el-sub-menu__icon-arrow {
-  display: none;
 }
 
 .org-tree {
