@@ -207,9 +207,40 @@ export const useOrgStore = defineStore('orgStore', {
       ],
     });
 
+    function getAllChildren(division: IDivision, targetId: number): IDivision[] {
+      // Если текущее подразделение — это искомое, возвращаем всех его детей
+      if (division.id === targetId) {
+        return getAllDescendants(division);
+      }
+    
+      // Иначе ищем в дочерних подразделениях
+      for (const child of division.children) {
+        const result = getAllChildren(child, targetId);
+        if (result.length > 0) {
+          return result;
+        }
+      }
+    
+      // Если ничего не найдено, возвращаем пустой массив
+      return [];
+    }
+
+    function getAllDescendants(division: IDivision): IDivision[] {
+      let descendants: IDivision[] = [];
+    
+      // Добавляем всех детей текущего подразделения
+      for (const child of division.children) {
+        descendants.push(child); // Добавляем текущего ребенка
+        descendants = descendants.concat(getAllDescendants(child)); // Рекурсивно добавляем его детей
+      }
+    
+      return descendants;
+    }
+
     return {
       organization,
-      divisions
+      divisions,
+      getAllChildren
     }
   }
 })

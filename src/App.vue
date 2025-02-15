@@ -1,7 +1,7 @@
 <template>
     <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/test">Test Task</router-link>
+      <!-- <router-link to="/">Home</router-link>
+      <router-link to="/test">Test Task</router-link> -->
     </nav>
     <main class="main">
       <OrgStructure />
