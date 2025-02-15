@@ -14,6 +14,12 @@ import OrgStructure from './components/OrgStructure.vue'
 </script>
 
 <style>
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 nav {
   width: 100%;
   display: flex;
