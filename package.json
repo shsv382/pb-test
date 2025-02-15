@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "predeploy": "npm run build && cp deploy/* dist",
+    "deploy": "scp -i ../ssh_keys/aeza -r dist/* root@89.22.226.203:/root/dev/service-structure"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.5",
     "core-js": "^3.8.3",
     "element-plus": "^2.9.4",
     "pinia": "^3.0.1",
