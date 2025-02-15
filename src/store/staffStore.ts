@@ -390,7 +390,7 @@ export const useStaffStore = defineStore('staffStore', {
           divisionID: 11,
           role: "сотрудник",
           birthday: new Date("2000-08-20"),
-          startDate: new Date("2025-09-30"),
+          startDate: new Date("2023-09-30"),
         },
         {
           id: 44,
@@ -426,7 +426,7 @@ export const useStaffStore = defineStore('staffStore', {
           divisionID: 12,
           role: "сотрудник",
           birthday: new Date("2001-04-10"),
-          startDate: new Date("2026-05-20"),
+          startDate: new Date("2024-05-20"),
         },
         {
           id: 48,
@@ -453,7 +453,7 @@ export const useStaffStore = defineStore('staffStore', {
           divisionID: 1,
           role: "сотрудник",
           birthday: new Date("2002-10-25"),
-          startDate: new Date("2027-11-15"),
+          startDate: new Date("2017-11-15"),
         },
         {
           id: 51,
@@ -471,7 +471,7 @@ export const useStaffStore = defineStore('staffStore', {
           divisionID: 2,
           role: "сотрудник",
           birthday: new Date("2003-02-05"),
-          startDate: new Date("2028-03-15"),
+          startDate: new Date("2018-03-15"),
         },
         {
           id: 53,
@@ -489,7 +489,7 @@ export const useStaffStore = defineStore('staffStore', {
           divisionID: 3,
           role: "сотрудник",
           birthday: new Date("2004-06-15"),
-          startDate: new Date("2029-07-25"),
+          startDate: new Date("2019-07-25"),
         },
         {
           id: 55,

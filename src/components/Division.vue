@@ -18,7 +18,7 @@
 		<div class="division__stats">
 			<el-card style="width: 100%; height: 100%">
 				<p>
-					Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(divisionStaff.length, ['человек', 'человека', 'человек']) }}
+					Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(wholeOfficers, ['человек', 'человека', 'человек']) }}
 				</p>
 				<p>
 					Средний возраст - {{ roundNumber(mediumAge) }} {{ datePluralize(roundNumber(mediumAge), ["год", "года", "лет"]) }}
