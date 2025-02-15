@@ -30,8 +30,8 @@ nav {
 
 .main {
   display: grid;
-  grid-template-columns: 300px auto;
-  gap: 30px;
+  grid-template-columns: 350px auto;
+  gap: 20px;
   padding: 0 30px;
   max-width: 90%;
   padding: 0 5%;

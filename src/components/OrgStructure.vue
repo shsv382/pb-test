@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h1>Организационная структура</h1>
-    <button @click="logOrganization">Показать структуру в консоли</button>
-    <OrganizationTree :organization="organization" :root="true" />
+    <h1 class="org-structure__header">Организационная структура</h1>
+    <!-- <button @click="logOrganization">Показать структуру в консоли</button> -->
+    
+    <el-menu>
+      <OrganizationTree :organization="organization" :root="true" />
+    </el-menu>
   </div>
 </template>
 
@@ -18,3 +21,9 @@ const logOrganization = () => {
   console.log(JSON.parse(JSON.stringify(organization.value)));
 };
 </script>
+
+<style lang="scss" scoped>
+.org-structure__header {
+  margin-bottom: 1em;
+}
+</style>

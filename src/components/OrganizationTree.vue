@@ -1,34 +1,39 @@
 <template>
-    <div>
-    <ul class="subtree" :class="{'root': root}">
-        <li v-for="division in organization.children" :key="division.id">
-        <div v-if="!division.isEditing" 
-            class="division" 
-            @click="toggleDivision(division)"
-            @contextmenu.prevent="startEditing(division)"
-        >
-            <RouterLink @click.stop :to="`/division/${division.id}`">{{ division.name }}</RouterLink>
-            {{ division.isOpen ? '▼' : '►' }}
-        </div>
-        <input
-            v-else
-            v-model="division.name"
-            @blur="stopEditing(division)"
-            @keyup.enter="stopEditing(division)"
-            @keyup.escape="cancelEditing(division)"
-            autofocus
-            />
-
-        <transition name="fade">
-            <OrganizationTree
-            v-if="division.children.length && division.isOpen"
-            :organization="division"
-            :root="false"
-            />
-        </transition>
-        </li>
-    </ul>
-    </div>
+  <el-sub-menu 
+    v-for="division in organization.children" 
+    :key="division.id" 
+    :index="division.id" 
+    :class="{'root': root, 'no-children': !division.children.length}"
+    class="org-tree"
+  >
+    <template #title> 
+      <div v-if="!division.isEditing" 
+        class="org-tree__title"
+        @click="toggleDivision(division)"
+        @contextmenu.prevent="startEditing(division)"
+      >
+        <RouterLink @click.stop :to="`/division/${division.id}`">
+          <el-link type="primary" :underline="false">
+            {{ division.name }}
+          </el-link>
+        </RouterLink>
+        <!-- {{ division.isOpen ? '▼' : '►' }} -->
+      </div>
+      <el-input
+        v-else
+        v-model="division.name"
+        @blur="stopEditing(division)"
+        @keyup.enter="stopEditing(division)"
+        @keyup.escape="cancelEditing(division)"
+        autofocus
+        />
+    </template> 
+        <OrganizationTree
+          v-if="division.children.length"
+          :organization="division"
+          :root="false"
+        />
+  </el-sub-menu>
 </template>
 
 <script setup lang="ts">
@@ -76,40 +81,32 @@ const toggleDivision = (division: Division) => {
     };
 </script>
 
-<style lang="scss" scoped>
-.subtree {
+<style lang="scss">
+.el-sub-menu {
+  --el-menu-base-level-padding: 10px; /* Новое значение */
+}
+
+.el-sub-menu.no-children .el-sub-menu__icon-arrow {
+  display: none;
+}
+
+.org-tree {
     list-style-type: none;
-    padding-left: 10px;
     margin-left: 10px;
-    border-left: 1px solid #9cc5ad;
+    border-left: 1px solid var(--el-menu-active-color);
     &.root {
-        padding-left: 0px;
         margin-left: 0px;
         border-left: none;
     }
 }
 
-.division {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 5px;
-    text-align: left;
-    &:hover {
-        background-color: #f0f0f0;
-    }
+.org-tree__title {
+  max-width: 100%;
+  overflow: hidden;
 }
 
-/* Анимация для плавного раскрытия/сворачивания */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s, transform 0.3s;
+.root > li:last-child {
+  border-bottom: none;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-}
 </style>

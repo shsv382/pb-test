@@ -16,7 +16,27 @@ export const useOrgStore = defineStore('orgStore', {
           children: [
             {
               id: 3,
-              name: 'Группа фронтенда',
+              name: 'Управление информационно-телекоммуникационного обеспечения',
+              chiefID: 3,
+              children: [
+                {
+                  id: 7,
+                  name: 'Групп 111енда',
+                  chiefID: 3,
+                  children: [
+                    {
+                      id: 9,
+                      name: 'Отдел тестирования',
+                      chiefID: 4,
+                      children: [],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 6,
+              name: 'Групп енда',
               chiefID: 3,
               children: [],
             },
@@ -34,6 +54,5 @@ export const useOrgStore = defineStore('orgStore', {
     return {
       organization
     }
-  },
-  persist: true
+  }
 })
