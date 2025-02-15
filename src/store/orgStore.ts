@@ -34,6 +34,12 @@ export const useOrgStore = defineStore('orgStore', {
                     },
                   ],
                 },
+                {
+                  id: 10,
+                  name: '2 группа',
+                  chiefID: 3,
+                  children: []
+                }
               ],
             },
             {
