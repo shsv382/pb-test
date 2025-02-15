@@ -1,30 +1,33 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+    <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/test">Test Task</router-link>
+    </nav>
+    <main class="main">
+      <OrgStructure />
+      <router-view />
+    </main>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script setup lang="ts">
+import OrgStructure from './components/OrgStructure.vue'
+</script>
+
+<style>
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
 }
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.main {
+  display: grid;
+  grid-template-columns: 300px auto;
+  gap: 30px;
+  padding: 0 30px;
+  width: 100%;
+  max-width: 1140px;
 }
 </style>
