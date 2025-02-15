@@ -27,7 +27,8 @@ nav {
   grid-template-columns: 300px auto;
   gap: 30px;
   padding: 0 30px;
-  width: 100%;
-  max-width: 1140px;
+  max-width: 90%;
+  padding: 0 5%;
+  margin: auto;
 }
 </style>

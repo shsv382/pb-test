@@ -2,7 +2,7 @@
   <div>
     <h1>Организационная структура</h1>
     <button @click="logOrganization">Показать структуру в консоли</button>
-    <OrganizationTree :organization="organization" />
+    <OrganizationTree :organization="organization" :root="true" />
   </div>
 </template>
 

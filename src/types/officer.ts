@@ -4,6 +4,6 @@ export interface Officer {
     id: number;
     firstName: string;
     lastName: string;
-    division: Division;
+    divisionID: number;
 }
   

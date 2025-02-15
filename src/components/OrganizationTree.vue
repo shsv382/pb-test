@@ -1,13 +1,14 @@
 <template>
     <div>
-    <ul>
+    <ul class="subtree" :class="{'root': root}">
         <li v-for="division in organization.children" :key="division.id">
         <div v-if="!division.isEditing" 
             class="division" 
             @click="toggleDivision(division)"
             @contextmenu.prevent="startEditing(division)"
         >
-            {{ division.name }} {{ division.isOpen ? '▼' : '►' }}
+            <RouterLink @click.stop :to="`/division/${division.id}`">{{ division.name }}</RouterLink>
+            {{ division.isOpen ? '▼' : '►' }}
         </div>
         <input
             v-else
@@ -18,17 +19,11 @@
             autofocus
             />
 
-        <!-- Список сотрудников -->
-        <!-- <ul v-if="division.staff.length && division.isOpen">
-            <li v-for="officer in division.staff" :key="officer.id">
-            {{ officer.firstName }} {{ officer.lastName }}
-            </li>
-        </ul> -->
-
         <transition name="fade">
             <OrganizationTree
             v-if="division.children.length && division.isOpen"
             :organization="division"
+            :root="false"
             />
         </transition>
         </li>
@@ -38,9 +33,11 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
+import { RouterLink } from 'vue-router';
 
 const props = defineProps<{
     organization: Division;
+    root?: boolean
 }>();
 
 interface Officer {
@@ -53,7 +50,6 @@ interface Officer {
 interface Division {
     id: number;
     name: string;
-    staff: Officer[];
     children: Division[];
     isOpen?: boolean; 
     isEditing?: boolean;
@@ -81,9 +77,16 @@ const toggleDivision = (division: Division) => {
 </script>
 
 <style lang="scss" scoped>
-ul {
+.subtree {
     list-style-type: none;
-    padding-left: 0px;
+    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 1px solid #9cc5ad;
+    &.root {
+        padding-left: 0px;
+        margin-left: 0px;
+        border-left: none;
+    }
 }
 
 .division {

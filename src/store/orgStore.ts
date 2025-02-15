@@ -7,24 +7,17 @@ export const useOrgStore = defineStore('orgStore', {
     const organization = ref<Division>({
       id: 1,
       name: 'Главное управление',
-      staff: [
-        { id: 1, firstName: 'Иван', lastName: 'Иванов', division: {} as Division },
-        { id: 2, firstName: 'Петр', lastName: 'Петров', division: {} as Division },
-      ],
+      chiefID: 1,
       children: [
         {
           id: 2,
           name: 'Отдел разработки',
-          staff: [
-            { id: 3, firstName: 'Алексей', lastName: 'Сидоров', division: {} as Division },
-          ],
+          chiefID: 2,
           children: [
             {
               id: 3,
               name: 'Группа фронтенда',
-              staff: [
-                { id: 4, firstName: 'Мария', lastName: 'Кузнецова', division: {} as Division },
-              ],
+              chiefID: 3,
               children: [],
             },
           ],
@@ -32,9 +25,7 @@ export const useOrgStore = defineStore('orgStore', {
         {
           id: 4,
           name: 'Отдел тестирования',
-          staff: [
-            { id: 5, firstName: 'Ольга', lastName: 'Смирнова', division: {} as Division },
-          ],
+          chiefID: 4,
           children: [],
         },
       ],
