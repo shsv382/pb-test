@@ -1,19 +1,34 @@
 # service-structure
 
-## Project setup
+## Локальный деплой
+```
+cp deploy/* dist
+```
+нужные конфигурационные файлы для поднятия контейнера с Nginx уже внутри.
+
+```
+cd dist
+```
+перейдите в директорию.
+
+```
+./start.sh
+```
+если у вас установлен Docker, то эта команда скопирует настройки в контейнер и запустит его на порту 5050
+
+## Локальное разворачивание
+### Установка зависимостей
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Компиляция в режиме разработки
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Компиляция для деплоя
 ```
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

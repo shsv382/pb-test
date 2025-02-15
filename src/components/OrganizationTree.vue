@@ -67,6 +67,7 @@ const cancelEditing = (division: IDivision) => {
 <style lang="scss" scoped>
 .el-sub-menu {
   --el-menu-base-level-padding: 10px; /* Новое значение */
+  padding-right: 0px;
 }
 
 .org-tree {
