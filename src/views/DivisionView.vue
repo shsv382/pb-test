@@ -16,3 +16,9 @@ watchEffect(() => {
   id.value = Number(route.params.id); // Обновляем userId при изменении параметра маршрута
 });
 </script>
+
+<style lang="scss" scoped>
+.division-page {
+  max-width: 100%;
+}
+</style>

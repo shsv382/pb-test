@@ -1,6 +1,6 @@
-import { Division } from "./division";
+import { IDivision } from "./division";
 
-export interface Officer {
+export interface IOfficer {
     id: number;
     firstName: string;
     lastName: string;

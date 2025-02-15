@@ -1,10 +1,10 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { Division } from '@/types';
+import { IDivision } from '@/types';
 import { ref } from 'vue'
 
 export const useOrgStore = defineStore('orgStore', {
   state: () => {
-    const organization = ref<Division>({
+    const organization = ref<IDivision>({
       id: 1,
       name: 'Главное управление',
       chiefID: 1,

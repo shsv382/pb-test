@@ -1,10 +1,10 @@
-import { Officer } from './officer'
+import { IOfficer } from './officer'
 
-export interface Division {
+export interface IDivision {
     id: number;
     name: string;
     chiefID: number
-    children: Division[];
+    children: IDivision[];
     isOpen?: boolean; 
     isEditing?: boolean
 }

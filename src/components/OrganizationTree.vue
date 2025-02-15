@@ -39,49 +39,35 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import { RouterLink } from 'vue-router';
+import { IOfficer, IDivision } from '@/types';
 
 const props = defineProps<{
-  organization: Division;
+  organization: IDivision;
   root?: boolean
 }>();
 
-interface Officer {
-  id: number;
-  firstName: string;
-  lastName: string;
-  division: Division;
-}
-
-interface Division {
-  id: number;
-  name: string;
-  children: Division[];
-  isOpen?: boolean; 
-  isEditing?: boolean;
-}
-
 // Функция для раскрытия/сворачивания узла
-const toggleDivision = (division: Division) => {
+const toggleDivision = (division: IDivision) => {
   division.isOpen = !division.isOpen;
 };
 
 // Функция для начала редактирования
-const startEditing = (division: Division) => {
+const startEditing = (division: IDivision) => {
   division.isEditing = true;
 };
 
 // Функция для завершения редактирования
-const stopEditing = (division: Division) => {
+const stopEditing = (division: IDivision) => {
   division.isEditing = false;
 };
 
 // Функция для отмены редактирования
-const cancelEditing = (division: Division) => {
+const cancelEditing = (division: IDivision) => {
   division.isEditing = false;
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-sub-menu {
   --el-menu-base-level-padding: 10px; /* Новое значение */
 }

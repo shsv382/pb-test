@@ -33,8 +33,6 @@ nav {
   grid-template-columns: 350px auto;
   gap: 20px;
   padding: 0 30px;
-  max-width: 90%;
-  padding: 0 5%;
-  margin: auto;
+  width: 100%;
 }
 </style>
