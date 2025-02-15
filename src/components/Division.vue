@@ -1,47 +1,54 @@
 <template>
-	<h1 class="division__header" v-if="currentDivision">
-		{{ currentDivision.name }}
-	</h1>
-	<h1 v-else>Не найдено такого подразделения</h1>
-
-	<h6 class="division__header" v-if="currentDivisionFullName">
-		<template v-for="(w, i) in currentDivisionFullName">
-			<span v-if="i > 0">{{ w }}</span>
-			<span v-if="i > 0 && i < currentDivisionFullName.length - 2">&nbsp; | &nbsp;</span>
-		</template>
-	</h6>
-
-	<div class="division__summary">
-		<div class="division__chief">
-			<Officer v-if="divisionChief" :officer="divisionChief" />
+	<template v-if="loading">
+		<div v-loading="loading" style="width: 100%; height: 80vh">
+			
 		</div>
-		<div class="division__stats">
-			<el-card style="width: 100%; height: 100%">
-				<div class="division__stats-content">
-					<p class="division__stats-unit">
-						<i className="icon-user-square icon" />
-						Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(wholeOfficers, ['человек', 'человека', 'человек']) }}
-					</p>
-					<p class="division__stats-unit">
-						<i className="icon-calendar icon" />
-						Средний возраст - {{ roundNumber(mediumAge) }} {{ datePluralize(roundNumber(mediumAge), ["год", "года", "лет"]) }}
-					</p>
-					<p class="division__stats-unit">
-						<i className="icon-clock icon" />
-						Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
-					</p>
-				</div>
-			</el-card>
+	</template>
+	<template v-else>
+		<h1 class="division__header" v-if="currentDivision">
+			{{ currentDivision.name }}
+		</h1>
+		<h1 v-else>Не найдено такого подразделения</h1>
+
+		<h6 class="division__header" v-if="currentDivisionFullName">
+			<template v-for="(w, i) in currentDivisionFullName">
+				<span v-if="i > 0">{{ w }}</span>
+				<span v-if="i > 0 && i < currentDivisionFullName.length - 2">&nbsp; | &nbsp;</span>
+			</template>
+		</h6>
+
+		<div class="division__summary">
+			<div class="division__chief">
+				<Officer v-if="divisionChief" :officer="divisionChief" />
+			</div>
+			<div class="division__stats">
+				<el-card style="width: 100%; height: 100%">
+					<div class="division__stats-content">
+						<p class="division__stats-unit">
+							<i class="icon-user-square icon" />
+							Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(wholeOfficers, ['человек', 'человека', 'человек']) }}
+						</p>
+						<p class="division__stats-unit">
+							<i class="icon-calendar icon" />
+							Средний возраст - {{ roundNumber(mediumAge) }} {{ datePluralize(roundNumber(mediumAge), ["год", "года", "лет"]) }}
+						</p>
+						<p class="division__stats-unit">
+							<i class="icon-clock icon" />
+							Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
+						</p>
+					</div>
+				</el-card>
+			</div>
 		</div>
-	</div>
 
-	<el-divider />
+		<el-divider />
 
-	<ul class="division__staff">
-		<li v-for="officer in divisionStaff.filter((o) => o.role.toLowerCase() !== 'начальник')" :key="officer.id + officer.lastName" class="staff__officer">
-			<Officer :officer="officer" />
-		</li>
-	</ul>
+		<ul class="division__staff">
+			<li v-for="officer in divisionStaff.filter((o) => o.role.toLowerCase() !== 'начальник')" :key="officer.id + officer.lastName" class="staff__officer">
+				<Officer :officer="officer" />
+			</li>
+		</ul>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -53,6 +60,31 @@ import { ref, computed, onMounted } from 'vue';
 import Officer from './Officer.vue';
 import { calculateAverageAge, datePluralize } from '@/helpers/datesHelpers';
 import { roundNumber } from '@/helpers/numberHelpers';
+
+
+// По-хорошему здесь будет useFetch
+// Имитация запроса сотрудников с сервера
+const data = ref<any>(null)
+const loading = ref<boolean>(true)
+
+const fetchData = async () => {
+	loading.value = true;
+
+	new Promise((resolve) => {
+		setTimeout(() => {
+	resolve({ status: 200, message: 'Данные успешно загружены' }); // Имитация ответа от сервера
+	}, 1000); // Имитация задержки в 1 секунду
+	})
+		.then((response) => {
+			data.value = response; 
+		})
+		.finally(() => {
+			loading.value = false; 
+		});
+};
+
+onMounted(fetchData)
+
 
 const orgStore = useOrgStore()
 const { divisions, organization } = storeToRefs(orgStore)

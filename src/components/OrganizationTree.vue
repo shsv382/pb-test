@@ -9,7 +9,6 @@
     <template #title> 
       <div v-if="!division.isEditing" 
         class="org-tree__title"
-        @click="toggleDivision(division)"
         @contextmenu.prevent="startEditing(division)"
       >
         <RouterLink @click.stop :to="`/division/${division.id}`">
@@ -46,22 +45,14 @@ const props = defineProps<{
   root?: boolean
 }>();
 
-// Функция для раскрытия/сворачивания узла
-const toggleDivision = (division: IDivision) => {
-  division.isOpen = !division.isOpen;
-};
-
-// Функция для начала редактирования
 const startEditing = (division: IDivision) => {
   division.isEditing = true;
 };
 
-// Функция для завершения редактирования
 const stopEditing = (division: IDivision) => {
   division.isEditing = false;
 };
 
-// Функция для отмены редактирования
 const cancelEditing = (division: IDivision) => {
   division.isEditing = false;
 };
