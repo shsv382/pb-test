@@ -1,7 +1,10 @@
 <template>
-	<h1>This is an about page</h1>
+	<h1 class="division__header" v-if="currentDivisionFullName">
+		<span v-for="w in currentDivisionFullName">{{ w }}</span>
+	</h1>
+	<h1 v-else>Не найдено такого подразделения</h1>
 
-	<ul class="staff">
+	<ul class="division__staff">
 		<li v-for="officer in divisionStaff" :key="officer.id + officer.lastName" class="staff__officer">
 			<Officer :officer="officer" />
 		</li>
@@ -9,25 +12,42 @@
 </template>
 
 <script setup lang="ts">
-import { IOfficer } from '@/types';
+import { IDivision, IDivisionRAW, IOfficer } from '@/types';
 import { useStaffStore } from '../store/staffStore';
-// import { useOrgStore } from '../store/orgStore';
+import { useOrgStore } from '../store/orgStore';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Officer from './Officer.vue';
-import { orderBy } from 'element-plus/es/components/table/src/util';
 
-// const orgStore = useOrgStore()
-// const { organization } = storeToRefs(orgStore)
+const orgStore = useOrgStore()
+const { divisions } = storeToRefs(orgStore)
 const props = defineProps<{id: number}>()
 const staffStore = useStaffStore()
 const { staff } = storeToRefs(staffStore)
 
 const divisionStaff = ref<IOfficer[]>(staff.value.filter(officer => officer.divisionID === props.id))
+const currentDivision = ref<IDivisionRAW | undefined>(divisions.value.find(item => item.id === props.id))
+const currentDivisionFullName = computed(() => {
+	let name: string[] = [''];
+	let division = currentDivision.value
+	if (division) {
+		name.push(division.name)
+		while (division?.id !== 0) {
+			division = divisions.value.find(div => div.id === division?.parentID)
+			if (division) name.push(division.name)
+		}
+	}
+	return name
+})
 </script>
 
 <style scoped>
-.staff {
+.division__header{
+	display: flex;
+	flex-direction: column;
+}
+
+.division__staff {
 	padding: 20px 0;
 	margin: 0;
 	list-style: none;

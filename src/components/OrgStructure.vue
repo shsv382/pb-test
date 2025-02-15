@@ -2,8 +2,12 @@
   <div>
     <h1 class="org-structure__header">Организационная структура</h1>
 
-    <el-input class="org-structure__filter" v-model="filter" placeholder="Поиск" />
-    
+    <el-input 
+      class="org-structure__filter" 
+      v-model="filter" 
+      placeholder="Поиск"
+     />
+
     <el-menu>
       <OrganizationTree v-if="filteredOrg?.children.length" :organization="filteredOrg" :root="true" />
     </el-menu>
@@ -14,7 +18,7 @@
 import OrganizationTree from './OrganizationTree.vue';
 import { useOrgStore } from '../store/orgStore';
 import { storeToRefs } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { IDivision, IOfficer } from '@/types';
 
 const orgStore = useOrgStore()
@@ -24,13 +28,17 @@ const filter = ref<string>('')
 
 function filterTreeBySubstring(node: IDivision, substring: string): IDivision | null {
     const isNodeMatch = node.name.toUpperCase().includes(substring.toUpperCase()) || 
-    (node.acronym && node.acronym.toUpperCase().includes(substring.toUpperCase()));
+        (node.acronym && node.acronym.toUpperCase().includes(substring.toUpperCase()));
+
+    if (isNodeMatch) {
+        return node
+    }
 
     const filteredChildren = node.children
         .map(child => filterTreeBySubstring(child, substring))
         .filter(child => child !== null) as IDivision[];
 
-    if (isNodeMatch || filteredChildren.length > 0) {
+    if (filteredChildren.length > 0) {
         return {
             ...node,
             children: filteredChildren
