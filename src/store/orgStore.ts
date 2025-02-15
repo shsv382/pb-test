@@ -5,28 +5,30 @@ import { ref } from 'vue'
 export const useOrgStore = defineStore('orgStore', {
   state: () => {
     const organization = ref<IDivision>({
-      id: 1,
-      name: 'Главное управление',
-      chiefID: 1,
+      id: 0,
+      name: '',
+      chiefID: 0,
       children: [
         {
           id: 2,
-          name: 'Отдел разработки',
+          name: 'Служба случайных связей и интересов',
+          acronym: 'СССИ',
           chiefID: 2,
           children: [
             {
               id: 3,
-              name: 'Управление информационно-телекоммуникационного обеспечения',
+              name: 'Управление интернет-телевидения и обогащения',
+              acronym: 'УИТО',
               chiefID: 3,
               children: [
                 {
                   id: 7,
-                  name: 'Групп 111енда',
+                  name: '1 отделение',
                   chiefID: 3,
                   children: [
                     {
                       id: 9,
-                      name: 'Отдел тестирования',
+                      name: '3 группа',
                       chiefID: 4,
                       children: [],
                     },
@@ -36,7 +38,8 @@ export const useOrgStore = defineStore('orgStore', {
             },
             {
               id: 6,
-              name: 'Групп енда',
+              name: 'Управление правильного питания',
+              acronym: 'УПП',
               chiefID: 3,
               children: [],
             },
@@ -44,7 +47,8 @@ export const useOrgStore = defineStore('orgStore', {
         },
         {
           id: 4,
-          name: 'Отдел тестирования',
+          name: 'Образовательное управление',
+          acronym: 'ОУ',
           chiefID: 4,
           children: [],
         },

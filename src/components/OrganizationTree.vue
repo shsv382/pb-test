@@ -3,7 +3,7 @@
     v-for="division in organization.children" 
     :key="division.id" 
     :index="division.id" 
-    :class="{'root': root, 'no-children': !division.children.length}"
+    :class="{'root': root, 'no-children': !division.children?.length}"
     class="org-tree"
   >
     <template #title> 
@@ -14,7 +14,7 @@
       >
         <RouterLink @click.stop :to="`/division/${division.id}`">
           <el-link type="primary" :underline="false">
-            {{ division.name }}
+            {{ division.acronym || division.name }}
           </el-link>
         </RouterLink>
         <!-- {{ division.isOpen ? '▼' : '►' }} -->
@@ -29,7 +29,7 @@
         />
     </template> 
       <OrganizationTree
-        v-if="division.children.length"
+        v-if="division.children?.length"
         :organization="division"
         :root="false"
       />
