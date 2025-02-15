@@ -17,15 +17,20 @@
 		</div>
 		<div class="division__stats">
 			<el-card style="width: 100%; height: 100%">
-				<p>
-					Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(wholeOfficers, ['человек', 'человека', 'человек']) }}
-				</p>
-				<p>
-					Средний возраст - {{ roundNumber(mediumAge) }} {{ datePluralize(roundNumber(mediumAge), ["год", "года", "лет"]) }}
-				</p>
-				<p>
-					Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
-				</p>
+				<div class="division__stats-content">
+					<p class="division__stats-unit">
+						<i className="icon-user-square icon" />
+						Численность подразделения: {{wholeOfficers}} {{ personsCountPluralize(wholeOfficers, ['человек', 'человека', 'человек']) }}
+					</p>
+					<p class="division__stats-unit">
+						<i className="icon-calendar icon" />
+						Средний возраст - {{ roundNumber(mediumAge) }} {{ datePluralize(roundNumber(mediumAge), ["год", "года", "лет"]) }}
+					</p>
+					<p class="division__stats-unit">
+						<i className="icon-clock icon" />
+						Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
+					</p>
+				</div>
 			</el-card>
 		</div>
 	</div>
@@ -103,8 +108,10 @@ function personsCountPluralize(count: number, words: [string, string, string]): 
 }
 </script>
 
-<style scoped>
-.division__header{
+<style lang="scss" scoped>
+@use "../styles/icons";
+
+.division__header {
 	display: flex;
 	flex-wrap: wrap;
 	margin-bottom: 1em;
@@ -117,5 +124,25 @@ function personsCountPluralize(count: number, words: [string, string, string]): 
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 20px;
+}
+
+.division__stats-content {
+	height: 100%;
+	gap: 0.5em;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.division__stats-unit {
+	display: flex;
+	align-items: center;
+	border: 1px solid #dfdfdf;
+	gap: 0.5em;
+	padding: 0.5em;
+}
+
+.icon {
+	background: linear-gradient(45deg, #0a0a2f, #6876f3);
 }
 </style>
