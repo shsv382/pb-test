@@ -2,7 +2,6 @@ export interface IDivisionRAW {
     id: number;
     name: string;
     acronym?: string;
-    chiefID: number;
     childrenID?: number[];
     parentID: number;
 }

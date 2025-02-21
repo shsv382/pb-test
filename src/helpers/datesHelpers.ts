@@ -43,11 +43,11 @@ export function datePluralize(count: number, words: [string, string, string]): s
 export function calculateAverageAge(dates: Date[]): number {
     const today = new Date();
     const ages = dates.map(oldDate => {
-      const age = today.getFullYear() - oldDate.getFullYear();
+      const age = today.getFullYear() - new Date(oldDate).getFullYear();
       
       const hasHadBirthdayThisYear =
-        today.getMonth() > oldDate.getMonth() ||
-        (today.getMonth() === oldDate.getMonth() && today.getDate() >= oldDate.getDate());
+        today.getMonth() > new Date(oldDate).getMonth() ||
+        (today.getMonth() === new Date(oldDate).getMonth() && today.getDate() >= new Date(oldDate).getDate());
   
       return hasHadBirthdayThisYear ? age : age - 1;
     });

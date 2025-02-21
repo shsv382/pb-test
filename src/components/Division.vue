@@ -1,21 +1,21 @@
 <template>
-	<template v-if="loading">
-		<div v-loading="loading" style="width: 100%; height: 80vh">
+	<template v-if="currentDivision.loading">
+		<div v-loading="currentDivision.loading" style="width: 100%; height: 80vh">
 			
 		</div>
 	</template>
 	<template v-else>
-		<h1 class="division__header" v-if="currentDivision">
-			{{ currentDivision.name }}
+		<h1 class="division__header" v-if="currentDivision.data">
+			{{ currentDivision.data.name }}
 		</h1>
 		<h1 v-else>Не найдено такого подразделения</h1>
 
-		<h6 class="division__header" v-if="currentDivisionFullName">
+		<!-- <h6 class="division__header" v-if="currentDivisionFullName">
 			<template v-for="(w, i) in currentDivisionFullName">
 				<span v-if="i > 0">{{ w }}</span>
 				<span v-if="i > 0 && i < currentDivisionFullName.length - 2">&nbsp; | &nbsp;</span>
 			</template>
-		</h6>
+		</h6> -->
 
 		<div class="division__summary">
 			<div class="division__chief">
@@ -43,8 +43,13 @@
 
 		<el-divider />
 
-		<ul class="division__staff">
-			<li v-for="officer in divisionStaff.filter((o) => o.role.toLowerCase() !== 'начальник')" :key="officer.id + officer.lastName" class="staff__officer">
+		<template v-if="currentDivisionStaff.loading">
+			<div v-loading="currentDivisionStaff.loading" style="width: 100%; height: 300px">
+				
+			</div>
+		</template>
+		<ul class="division__staff" v-else>
+			<li v-for="officer in currentDivisionStaff.data.filter(officer => officer.id !== divisionChief?.id && officer.divisionID === props.id)" :key="officer.id + officer.lastName" class="staff__officer">
 				<Officer :officer="officer" />
 			</li>
 		</ul>
@@ -60,84 +65,36 @@ import { ref, computed, onMounted } from 'vue';
 import Officer from './Officer.vue';
 import { calculateAverageAge, datePluralize } from '@/helpers/datesHelpers';
 import { roundNumber } from '@/helpers/numberHelpers';
-
-
-// По-хорошему здесь будет useFetch
-// Имитация запроса сотрудников с сервера
-const data = ref<any>(null)
-const loading = ref<boolean>(true)
-
-const fetchData = async () => {
-	loading.value = true;
-
-	new Promise((resolve) => {
-		setTimeout(() => {
-	resolve({ status: 200, message: 'Данные успешно загружены' }); // Имитация ответа от сервера
-	}, 1000); // Имитация задержки в 1 секунду
-	})
-		.then((response) => {
-			data.value = response; 
-		})
-		.finally(() => {
-			loading.value = false; 
-		});
-};
-
-onMounted(fetchData)
-
+import { useFetch } from '@/composables/useFetch';
+import { baseURL } from '@/constants';
+import { dataType } from 'element-plus/es/components/table-v2/src/common';
 
 const orgStore = useOrgStore()
-const { divisions, organization } = storeToRefs(orgStore)
+const { organization, currentDivision } = storeToRefs(orgStore)
 const props = defineProps<{id: number}>()
 const staffStore = useStaffStore()
-const { staff } = storeToRefs(staffStore)
+const { staff, currentDivisionStaff } = storeToRefs(staffStore)
 
-const divisionChief = ref<IOfficer | undefined>(staff.value.find(officer => officer.divisionID === props.id && officer.role === 'начальник'))
-const divisionStaff = ref<IOfficer[]>(staff.value.filter(officer => officer.divisionID === props.id))
+const divisionChief = ref<IOfficer | undefined>(currentDivisionStaff.value.data.find(officer => officer.divisionID === props.id && officer.role === 'начальник'))
 
-const currentDivision = ref<IDivisionRAW | undefined>(divisions.value.find(item => item.id === props.id))
-const currentDivisionFullName = computed(() => {
-	let name: string[] = [];
-	let division = currentDivision.value
-	if (division) {
-		name.push(division.name)
-		while (division?.id !== 0) {
-			division = divisions.value.find(div => div.id === division?.parentID)
-			if (division) name.push(division.name)
-		}
-	}
-	return name
-})
-
-const wholeIDs = computed(() => {
-	if (currentDivision.value) {
-		let ids: any = orgStore.getAllChildren(organization.value, currentDivision.value.id).map(child => child.id)
-		ids.push(currentDivision.value.id)
-		return ids
-	} else {
-		return []
-	}
-})
-
-const wholeOfficers = computed(() => {
-	return staff.value.filter(officer => {
-		return wholeIDs.value.indexOf(officer.divisionID) >= 0
-	}).length
-})
-
-
+const wholeOfficers = computed(() => currentDivisionStaff.value.data.length)
 const mediumAge = computed(() => {
-	return calculateAverageAge(divisionStaff.value.map(o => o.birthday))
+	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.birthday))
 })
 
 const mediumPeriod = computed(() => {
-	return calculateAverageAge(divisionStaff.value.map(o => o.startDate))
+	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.startDate))
 })
 
 function personsCountPluralize(count: number, words: [string, string, string]): string {
   const cases = [2, 0, 1, 1, 1, 2];
   return words[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
 }
+
+onMounted(async () => {
+	await orgStore.getCurrentDivision(props.id)
+	await staffStore.getCurrentDivisionStaff(props.id)
+})
 </script>
 
 <style lang="scss" scoped>

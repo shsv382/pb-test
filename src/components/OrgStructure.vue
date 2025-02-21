@@ -8,8 +8,13 @@
       placeholder="Поиск"
      />
 
-    <el-menu>
-      <OrganizationTree v-if="filteredOrg?.children.length" :organization="filteredOrg" :root="true" />
+    <el-menu v-if="filteredOrg?.length">
+      <OrganizationTree v-for="org in filteredOrg" :organization="org" :root="true" />
+    </el-menu>
+    <el-menu v-else-if="organization.loading">
+      <div v-loading="organization.loading" style="width: 100%; height: 20vh">
+			
+		  </div>
     </el-menu>
   </div>
 </template>
@@ -18,7 +23,7 @@
 import OrganizationTree from './OrganizationTree.vue';
 import { useOrgStore } from '../store/orgStore';
 import { storeToRefs } from 'pinia';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { IDivision, IOfficer } from '@/types';
 
 const orgStore = useOrgStore()
@@ -48,8 +53,13 @@ function filterTreeBySubstring(node: IDivision, substring: string): IDivision | 
     return null;
 }
 
-const filteredOrg = computed(() => filterTreeBySubstring(organization.value, filter.value));
+const filteredOrg = computed(() => {
+  return organization.value.data
+    .map(node => filterTreeBySubstring(node, filter.value))
+    .filter(node => !!node)
+});
 
+onMounted(orgStore.getOrganization)
 </script>
 
 <style lang="scss" scoped>

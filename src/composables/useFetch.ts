@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 export function useFetch(url: string) {
   const data = ref<any>(null)
@@ -16,8 +16,6 @@ export function useFetch(url: string) {
       loading.value = false
     }
   }
-
-  onMounted(fetchData)
 
   return { data, loading, error, fetchData }
 }

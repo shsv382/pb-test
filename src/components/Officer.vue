@@ -3,23 +3,22 @@
     <div class="officer">
       <el-avatar shape="square" :size="100" fit="cover" :src="`https://robohash.org/${officer.id}`" />
       <div class="officer__info">
-        <h4 class="officer__chief" v-if="local_officer.role.toLowerCase() === 'начальник'">Руководитель подразделения</h4>
-        <p class="officer__name">{{ local_officer.firstName }} {{ local_officer.lastName }}</p>
+        <h4 class="officer__chief" v-if="props.officer.role.toLowerCase() === 'начальник'">Руководитель подразделения</h4>
+        <p class="officer__name">{{ props.officer.firstName }} {{ props.officer.lastName }}</p>
         <p class="officer__role">{{ capitalize(officer.role) }}</p>
         <p class="officer__birthday">
-          {{ `${props.officer.birthday.getDate()}`.padStart(2, "0") }}.{{ `${props.officer.birthday.getMonth() + 1}`.padStart(2, "0") }}.{{ props.officer.birthday.getFullYear() }} г.р.
+          {{ `${new Date(props.officer.birthday).getDate()}`.padStart(2, "0") }}.{{ `${new Date(props.officer.birthday).getMonth() + 1}`.padStart(2, "0") }}.{{ new Date(props.officer.birthday).getFullYear() }} г.р.
         </p>
-        <p class="officer__time">{{ getPeriodInWords(local_officer.startDate, new Date()) }}</p>
+        <p class="officer__time">{{ getPeriodInWords(new Date(props.officer.startDate), new Date()) }}</p>
       </div>
     </div>
     <i class="icon-edit edit" @click="openDialog" />
   </el-card>
-  <UserEditDialog
+  <!-- <UserEditDialog
       :visible="dialogVisible"
       @update:visible="dialogVisible = $event"
-      :user="local_officer"
-      @save="handleSave"
-    />
+      :user="props.officer"
+    /> -->
 </template>
 
 <script setup lang="ts">
@@ -31,8 +30,6 @@ import { ref } from 'vue';
 
 const props = defineProps<{officer: IOfficer}>()
 
-const local_officer = ref<IOfficer>(props.officer)
-
 const dialogVisible = ref(false);
 
 const openDialog = () => {
@@ -43,17 +40,6 @@ const closeDialog = () => {
   dialogVisible.value = true;
 };
 
-const handleSave = (updatedUser: any) => {
-  local_officer.value = {
-    ...local_officer.value,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    role: updatedUser.role,
-	  birthday: new Date(updatedUser.birthday)
-  }
-
-  closeDialog()
-};
 </script>
 
 <style lang="scss" scoped>
