@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-export function useFetch(url: string) {
+export function useFetch(url: string, options={}) {
   const data = ref<any>(null)
   const loading = ref<boolean>(true)
   const error = ref<any>(null)
@@ -8,7 +8,7 @@ export function useFetch(url: string) {
   const fetchData = async () => {
     loading.value = true
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, options)
       data.value = await response.json()
     } catch (err) {
       error.value = err

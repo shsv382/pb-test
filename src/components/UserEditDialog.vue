@@ -25,7 +25,15 @@
 			v-model="form.birthday"
 			type="date"
 			placeholder="Выберите дату"
-			format="dd.MM.yyyy"
+			format="DD.MM.YYYY"
+		  />
+		</el-form-item>
+    <el-form-item label="Работает с">
+		  <el-date-picker
+			v-model="form.startDate"
+			type="date"
+			placeholder="Выберите дату"
+			format="DD.MM.YYYY"
 		  />
 		</el-form-item>
 	  </el-form>
@@ -33,76 +41,76 @@
 	  <template #footer>
 		<span class="dialog-footer">
 		  <el-button @click="handleClose">Отмена</el-button>
-		  <el-button type="primary" @click="handleSave">{{loading ? 'Загрузка' : 'Сохранить'}}</el-button>
+		  <el-button type="primary" @click="handleSave">{{formLoading ? 'Загрузка' : 'Сохранить'}}</el-button>
 		</span>
 	  </template>
 	</el-dialog>
   </template>
   
-  <script setup lang="ts">
-  import { ref, watch } from 'vue';
-  
-  const props = defineProps({
-	user: {
-	  type: Object,
-	  required: true,
-	},
-	visible: {
-	  type: Boolean,
-	  required: true,
-	},
-  });
-  
-  const emit = defineEmits(['update:visible', 'save']);
-  
-  const form = ref({
-	firstName: props.user.firstName,
-	lastName: props.user.lastName,
-	role: props.user.role,
-	birthday: props.user.birthday,
-  });
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useFetch } from '@/composables/useFetch';
+import { baseURL } from '@/constants';
+import { IOfficer } from '@/types';
+import { useOrgStore } from '@/store/orgStore';
+import { storeToRefs } from 'pinia';
 
-  const loading = ref(false);
-	const data = ref<any>(null);
+const { currentDivision } = storeToRefs(useOrgStore())
 
-	const fetchData = async () => {
-		loading.value = true;
+const props = defineProps<{officer?: IOfficer, visible: boolean}>();
 
-		new Promise((resolve) => {
-			setTimeout(() => {
-        resolve({ status: 200, message: 'Данные успешно загружены' }); // Имитация ответа от сервера
-      }, 1000); // Имитация задержки в 1 секунду
-		})
-			.then((response) => {
-			  data.value = response; 
-			})
-			.finally(() => {
-			  loading.value = false; 
-			});
-	};
-  
-  const handleClose = () => {
-	  emit('update:visible', false); 
-	};
-	
-	const handleSave = async () => {
-	// Здесь отправляем данные на сервер
-    const response = await fetchData()
-    console.log("Отправлены!")
-  };
-  
-  watch(loading, (newValue) => {
-    if (newValue === false) {
-      emit('save', form.value); 
-      handleClose(); 
-    }
+const emit = defineEmits(['update:visible', 'save']);
+
+const form = ref({
+  firstName: props.officer?.firstName || '',
+  lastName: props.officer?.lastName || '',
+  role: props.officer?.role || '',
+  birthday: props.officer?.birthday || '',
+  startDate: props.officer?.startDate || '',
+  divisionID: props.officer?.divisionID || currentDivision.value.data?.id || 0
+});
+
+const formLoading = ref<boolean>(false)
+
+const handleClose = () => {
+  emit('update:visible', false); 
+};
+
+const handleSaveChanges = async () => {
+  const { data, loading, error, fetchData } = useFetch(`${baseURL}/staff/${props.officer?.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({...form.value})
   })
-  
-  </script>
-  
-  <style scoped>
-  .dialog-footer {
-	display: flex;
-	justify-content: flex-end;
-  }
-  </style>
+  formLoading.value = loading.value
+  await fetchData()
+  formLoading.value = loading.value
+  emit('save')
+};
+
+const handleSaveNew = async () => {
+  const { data, loading, error, fetchData } = useFetch(`${baseURL}/staff`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({...form.value})
+  })
+  formLoading.value = loading.value
+  await fetchData()
+  formLoading.value = loading.value
+  emit('save')
+};
+
+const handleSave = props.officer ? handleSaveChanges : handleSaveNew
+
+</script>
+
+<style scoped>
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

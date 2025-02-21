@@ -42,6 +42,15 @@
 							<i class="icon-clock icon" />
 							Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
 						</p>
+						<p class="division__stats-unit">
+							<el-button type="primary" plain style="width: 100%" @click="openDialog">Добавить сотрудника</el-button>
+							<UserEditDialog
+								v-if="currentDivision"
+								:visible="dialogVisible"
+								@update:visible="dialogVisible = $event"
+								@save="handleSave"
+							/>
+						</p>
 					</div>
 				</el-card>
 			</div>
@@ -71,9 +80,7 @@ import { ref, computed, onMounted } from 'vue';
 import Officer from './Officer.vue';
 import { calculateAverageAge, datePluralize } from '@/helpers/datesHelpers';
 import { roundNumber } from '@/helpers/numberHelpers';
-import { useFetch } from '@/composables/useFetch';
-import { baseURL } from '@/constants';
-import { dataType } from 'element-plus/es/components/table-v2/src/common';
+import UserEditDialog from './UserEditDialog.vue';
 
 const orgStore = useOrgStore()
 const { organization, currentDivision } = storeToRefs(orgStore)
@@ -97,6 +104,21 @@ const mediumPeriod = computed(() => {
 function personsCountPluralize(count: number, words: [string, string, string]): string {
   const cases = [2, 0, 1, 1, 1, 2];
   return words[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
+}
+
+const dialogVisible = ref(false);
+
+const openDialog = () => {
+  dialogVisible.value = true;
+};
+
+const closeDialog = () => {
+  dialogVisible.value = false;
+};
+
+const handleSave = () => {
+	closeDialog();
+	staffStore.getCurrentDivisionStaff(currentDivision?.value.data?.id || 0);
 }
 
 onMounted(async () => {
@@ -126,7 +148,7 @@ onMounted(async () => {
 .division__chief {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	gap: 1em;
 }
 
 .division__stats-content {
@@ -140,9 +162,12 @@ onMounted(async () => {
 .division__stats-unit {
 	display: flex;
 	align-items: center;
-	border: 1px solid #dfdfdf;
+	border-bottom: 1px solid #dfdfdf;
 	gap: 0.5em;
 	padding: 0.5em;
+	&:last-child {
+		border-bottom: none;
+	}
 }
 
 .icon {

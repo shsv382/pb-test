@@ -3,7 +3,6 @@
     <div class="officer">
       <el-avatar shape="square" :size="100" fit="cover" :src="`https://robohash.org/${officer.id}`" />
       <div class="officer__info">
-        <!-- <h4 class="officer__chief" v-if="props.officer.role.toLowerCase() === 'начальник'">Руководитель подразделения</h4> -->
         <p class="officer__name">{{ props.officer.firstName }} {{ props.officer.lastName }}</p>
         <p class="officer__role">{{ capitalize(officer.role) }}</p>
         <p class="officer__birthday">
@@ -14,11 +13,12 @@
     </div>
     <i class="icon-edit edit" @click="openDialog" />
   </el-card>
-  <!-- <UserEditDialog
-      :visible="dialogVisible"
-      @update:visible="dialogVisible = $event"
-      :user="props.officer"
-    /> -->
+  <UserEditDialog
+    :visible="dialogVisible"
+    @update:visible="dialogVisible = $event"
+    :officer="props.officer"
+    @save="getCurrentDivisionStaff(props.officer.divisionID)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,9 @@ import { getPeriodInWords } from '@/helpers/datesHelpers';
 import { capitalize } from '@/helpers/stringHelpers';
 import UserEditDialog from './UserEditDialog.vue';
 import { ref } from 'vue';
+import { useStaffStore } from '../store/staffStore';
+
+const { getCurrentDivisionStaff } = useStaffStore()
 
 const props = defineProps<{officer: IOfficer}>()
 
@@ -37,7 +40,7 @@ const openDialog = () => {
 };
 
 const closeDialog = () => {
-  dialogVisible.value = true;
+  dialogVisible.value = false;
 };
 
 </script>
