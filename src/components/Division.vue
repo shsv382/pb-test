@@ -10,13 +10,6 @@
 		</h1>
 		<h1 v-else>Не найдено такого подразделения</h1>
 
-		<!-- <h6 class="division__header" v-if="currentDivisionFullName">
-			<template v-for="(w, i) in currentDivisionFullName">
-				<span v-if="i > 0">{{ w }}</span>
-				<span v-if="i > 0 && i < currentDivisionFullName.length - 2">&nbsp; | &nbsp;</span>
-			</template>
-		</h6> -->
-
 		<template v-if="currentDivisionStaff.loading">
 			<div v-loading="currentDivisionStaff.loading" style="width: 100%; height: 80vh">
 				
@@ -94,11 +87,11 @@ const divisionChief = computed<IOfficer | undefined>(() =>
 
 const wholeOfficers = computed(() => currentDivisionStaff.value.data.length)
 const mediumAge = computed(() => {
-	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.birthday))
+	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.birthday)) || 0
 })
 
 const mediumPeriod = computed(() => {
-	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.startDate))
+	return calculateAverageAge(currentDivisionStaff.value.data?.map(o => o.startDate)) || 0
 })
 
 function personsCountPluralize(count: number, words: [string, string, string]): string {

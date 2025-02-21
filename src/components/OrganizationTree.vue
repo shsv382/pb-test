@@ -1,61 +1,69 @@
 <template>
   <el-sub-menu 
-    v-for="division in organization.children" 
-    :key="division.id" 
-    :index="division.id.toString()" 
-    :class="{'root': root, 'no-children': !division.children?.length}"
+    :index="organization.id.toString()" 
+    :class="{'root': root, 'no-children': !organization.children?.length}"
     class="org-tree"
   >
     <template #title> 
-      <div v-if="!division.isEditing" 
-        class="org-tree__title"
-        @contextmenu.prevent="startEditing(division)"
-      >
-        <RouterLink @click.stop :to="`/division/${division.id}`">
+      <div class="org-tree__title">
+        <RouterLink @click.stop :to="`/division/${organization.id}`">
           <el-link type="primary" :underline="false">
-            {{ division.acronym || division.name }}
+            {{ organization.acronym || organization.name }}
           </el-link>
         </RouterLink>
-        <!-- {{ division.isOpen ? '▼' : '►' }} -->
+        <div class="org-tree__edit-btn">
+          <i @click.prevent="openDialog" class="icon-edit" ></i>
+        </div>
       </div>
-      <el-input
-        v-else
-        v-model="division.name"
-        @blur="stopEditing(division)"
-        @keyup.enter="stopEditing(division)"
-        @keyup.escape="cancelEditing(division)"
-        autofocus
-        />
     </template> 
+    <template v-if="organization.children?.length">
       <OrganizationTree
-        v-if="division.children?.length"
+        v-for="division in organization.children" 
         :organization="division"
         :root="false"
+        :key="division.id" 
+        :index="division.id.toString()" 
       />
+    </template>
+    <DivisionEditDialog
+      :visible="dialogVisible"
+      @update:visible="dialogVisible = $event"
+      :division="props.organization"
+      @save="handleSave"
+    />
   </el-sub-menu>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { defineProps } from 'vue';
 import { RouterLink } from 'vue-router';
 import { IOfficer, IDivision } from '@/types';
+import { useOrgStore } from '@/store/orgStore';
+import DivisionEditDialog from './DivisionEditDialog.vue';
+
+const { getOrganization } = useOrgStore()
 
 const props = defineProps<{
   organization: IDivision;
   root?: boolean
 }>();
 
-const startEditing = (division: IDivision) => {
-  division.isEditing = true;
+const dialogVisible = ref(false);
+
+const openDialog = () => {
+  dialogVisible.value = true;
 };
 
-const stopEditing = (division: IDivision) => {
-  division.isEditing = false;
+const closeDialog = () => {
+  dialogVisible.value = false;
 };
 
-const cancelEditing = (division: IDivision) => {
-  division.isEditing = false;
-};
+const handleSave = async () => {
+  closeDialog()
+  await getOrganization()
+}
+
 </script>
 
 <style lang="scss">
@@ -65,6 +73,13 @@ const cancelEditing = (division: IDivision) => {
 </style>
 
 <style lang="scss" scoped>
+@import '../styles/icons';
+.icon-edit {
+	background: linear-gradient(45deg, #0a0a2f, #6876f3);
+  width: 1em;
+  height: 1em;
+}
+
 .el-sub-menu {
   --el-menu-base-level-padding: 10px; /* Новое значение */
   padding-right: 0px;
@@ -81,8 +96,17 @@ const cancelEditing = (division: IDivision) => {
 }
 
 .org-tree__title {
+  width: 100%;
   max-width: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.org-tree__edit-btn {
+  display: flex;
+  justify-content: center;
 }
 
 .root > li:last-child {
