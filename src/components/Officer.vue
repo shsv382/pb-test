@@ -3,7 +3,7 @@
     <div class="officer">
       <el-avatar shape="square" :size="100" fit="cover" :src="`https://robohash.org/${officer.id}`" />
       <div class="officer__info">
-        <h4 class="officer__chief" v-if="props.officer.role.toLowerCase() === 'начальник'">Руководитель подразделения</h4>
+        <!-- <h4 class="officer__chief" v-if="props.officer.role.toLowerCase() === 'начальник'">Руководитель подразделения</h4> -->
         <p class="officer__name">{{ props.officer.firstName }} {{ props.officer.lastName }}</p>
         <p class="officer__role">{{ capitalize(officer.role) }}</p>
         <p class="officer__birthday">

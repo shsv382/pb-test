@@ -17,9 +17,15 @@
 			</template>
 		</h6> -->
 
-		<div class="division__summary">
-			<div class="division__chief">
-				<Officer v-if="divisionChief" :officer="divisionChief" />
+		<template v-if="currentDivisionStaff.loading">
+			<div v-loading="currentDivisionStaff.loading" style="width: 100%; height: 80vh">
+				
+			</div>
+		</template>
+		<div v-else class="division__summary">
+			<div v-if="divisionChief" class="division__chief">
+				<h2 class="officer__chief">Руководитель подразделения</h2>
+				<Officer :officer="divisionChief" />
 			</div>
 			<div class="division__stats">
 				<el-card style="width: 100%; height: 100%">
@@ -75,7 +81,9 @@ const props = defineProps<{id: number}>()
 const staffStore = useStaffStore()
 const { staff, currentDivisionStaff } = storeToRefs(staffStore)
 
-const divisionChief = ref<IOfficer | undefined>(currentDivisionStaff.value.data.find(officer => officer.divisionID === props.id && officer.role === 'начальник'))
+const divisionChief = computed<IOfficer | undefined>(() => 
+	(currentDivisionStaff.value.data.find(officer => officer.divisionID == props.id && officer.role === 'начальник'))
+)
 
 const wholeOfficers = computed(() => currentDivisionStaff.value.data.length)
 const mediumAge = computed(() => {
@@ -113,6 +121,12 @@ onMounted(async () => {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 20px;
+}
+
+.division__chief {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .division__stats-content {
