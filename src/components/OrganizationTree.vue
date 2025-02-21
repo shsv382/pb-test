@@ -12,7 +12,7 @@
           </el-link>
         </RouterLink>
         <div class="org-tree__edit-btn">
-          <i @click.prevent="openDialog" class="icon-edit" ></i>
+          <i @click="openDialog" class="icon-edit" ></i>
         </div>
       </div>
     </template> 
