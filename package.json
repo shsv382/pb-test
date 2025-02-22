@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "predeploy": "npm run build && cp deploy/* dist",
-    "deploy": "scp -i ../ssh_keys/aeza -r dist/* root@89.22.226.203:/root/dev/service-structure"
+    "deploy": "scp -i ../ssh_keys/aeza -r dist/* root@89.22.226.203:/root/dev/service-structure/frontend"
   },
   "dependencies": {
     "@types/lodash": "^4.17.5",

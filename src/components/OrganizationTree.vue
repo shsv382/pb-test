@@ -11,9 +11,6 @@
             {{ organization.acronym || organization.name }}
           </el-link>
         </RouterLink>
-        <div class="org-tree__edit-btn">
-          <i @click="openDialog" class="icon-edit" ></i>
-        </div>
       </div>
     </template> 
     <template v-if="organization.children?.length">
@@ -25,12 +22,6 @@
       :index="division.id.toString()" 
       />
     </template>
-    <DivisionEditDialog
-      :visible="dialogVisible"
-      @update:visible="dialogVisible = $event"
-      :division="props.organization"
-      @save="handleSave"
-    />
   </el-sub-menu>
 </template>
 
@@ -40,7 +31,6 @@ import { defineProps } from 'vue';
 import { RouterLink } from 'vue-router';
 import { IOfficer, IDivision } from '@/types';
 import { useOrgStore } from '@/store/orgStore';
-import DivisionEditDialog from './DivisionEditDialog.vue';
 
 const { getOrganization } = useOrgStore()
 
@@ -49,20 +39,6 @@ const props = defineProps<{
   root?: boolean
 }>();
 
-const dialogVisible = ref(false);
-
-const openDialog = () => {
-  dialogVisible.value = true;
-};
-
-const closeDialog = () => {
-  dialogVisible.value = false;
-};
-
-const handleSave = async () => {
-  // closeDialog()
-  await getOrganization()
-}
 
 </script>
 
@@ -73,13 +49,6 @@ const handleSave = async () => {
 </style>
 
 <style lang="scss" scoped>
-@import '../styles/icons';
-.icon-edit {
-	background: linear-gradient(45deg, rgb(40, 101, 161), rgb(121, 187, 255));
-  width: 1em;
-  height: 1em;
-}
-
 .el-sub-menu {
   --el-menu-base-level-padding: 10px; /* Новое значение */
   padding-right: 0px;

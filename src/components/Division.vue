@@ -6,9 +6,19 @@
 	</template>
 	<template v-else>
 		<h1 class="division__header" v-if="currentDivision.data">
-			{{ currentDivision.data.name }}
+			{{ currentDivision.data.name }}         
+			<div class="division__edit-btn">
+          		<i @click="openDivisionDialog" class="icon-edit" ></i>
+        	</div>
 		</h1>
 		<h1 v-else>Не найдено такого подразделения</h1>
+
+		<DivisionEditDialog
+			:visible="divisionDialogVisible"
+			@update:visible="divisionDialogVisible = $event"
+			:division="currentDivision.data"
+			@save="handleDivisionSave"
+		/>
 
 		<template v-if="currentDivisionStaff.loading">
 			<div v-loading="currentDivisionStaff.loading" style="width: 100%; height: 80vh">
@@ -36,12 +46,12 @@
 							Средний срок службы - {{ roundNumber(mediumPeriod) }} {{ datePluralize(roundNumber(mediumPeriod), ["год", "года", "лет"]) }}
 						</p>
 						<p class="division__stats-unit">
-							<el-button type="primary" plain style="width: 100%" @click="openDialog">Добавить сотрудника</el-button>
+							<el-button type="primary" plain style="width: 100%" @click="openOfficerDialog">Добавить сотрудника</el-button>
 							<UserEditDialog
 								v-if="currentDivision"
-								:visible="dialogVisible"
-								@update:visible="dialogVisible = $event"
-								@save="handleSave"
+								:visible="officerDialogVisible"
+								@update:visible="officerDialogVisible = $event"
+								@save="handleOfficerSave"
 							/>
 						</p>
 					</div>
@@ -69,11 +79,12 @@ import { IDivision, IDivisionRAW, IOfficer } from '@/types';
 import { useStaffStore } from '../store/staffStore';
 import { useOrgStore } from '../store/orgStore';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import Officer from './Officer.vue';
 import { calculateAverageAge, datePluralize } from '@/helpers/datesHelpers';
 import { roundNumber } from '@/helpers/numberHelpers';
 import UserEditDialog from './UserEditDialog.vue';
+import DivisionEditDialog from './DivisionEditDialog.vue';
 
 const orgStore = useOrgStore()
 const { organization, currentDivision } = storeToRefs(orgStore)
@@ -99,34 +110,58 @@ function personsCountPluralize(count: number, words: [string, string, string]): 
   return words[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
 }
 
-const dialogVisible = ref(false);
+const officerDialogVisible = ref(false);
 
-const openDialog = () => {
-  dialogVisible.value = true;
+const openOfficerDialog = () => {
+	officerDialogVisible.value = true;
 };
 
-const closeDialog = () => {
-  dialogVisible.value = false;
+const closeOfficerDialog = () => {
+	officerDialogVisible.value = false;
 };
 
-const handleSave = () => {
-	closeDialog();
+const handleOfficerSave = () => {
+	closeOfficerDialog();
 	staffStore.getCurrentDivisionStaff(currentDivision?.value.data?.id || 0);
+}
+
+const divisionDialogVisible = ref(false);
+
+const openDivisionDialog = () => {
+	divisionDialogVisible.value = true;
+};
+
+const closeDivisionDialog = () => {
+	divisionDialogVisible.value = false;
+};
+
+const handleDivisionSave = async () => {
+	closeDivisionDialog()
+	orgStore.getCurrentDivision(props.id)
 }
 
 onMounted(async () => {
 	await orgStore.getCurrentDivision(props.id)
 	await staffStore.getCurrentDivisionStaff(props.id)
 })
+
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/icons";
+@import '../styles/icons';
+.icon-edit {
+	background: linear-gradient(45deg, rgb(40, 101, 161), rgb(121, 187, 255));
+	width: 0.8em;
+	height: 0.8em;
+	cursor: pointer;
+}
 
 .division__header {
 	display: flex;
 	flex-wrap: wrap;
 	margin-bottom: 1em;
+	gap: 0.5em;
+	align-items: center;
 }
 
 .division__summary, .division__staff {
@@ -161,6 +196,11 @@ onMounted(async () => {
 	&:last-child {
 		border-bottom: none;
 	}
+}
+
+.division__edit-btn {
+  display: flex;
+  justify-content: center;
 }
 
 .icon {
