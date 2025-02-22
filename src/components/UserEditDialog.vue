@@ -48,7 +48,7 @@
   </template>
   
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useFetch } from '@/composables/useFetch';
 import { baseURL } from '@/constants';
 import { IOfficer } from '@/types';
@@ -76,9 +76,17 @@ const handleClose = () => {
   emit('update:visible', false); 
 };
 
-const handleSaveChanges = async () => {
-  const { data, loading, error, fetchData } = useFetch(`${baseURL}/staff/${props.officer?.id}`, {
-    method: 'PUT',
+const url = computed<string>(() => {
+  return props.officer ? `${baseURL}/staff/${props.officer?.id}` : `${baseURL}/staff`
+})
+
+const requestMethod = computed<string>(() => {
+  return props.officer ? 'PUT' : 'POST'
+})
+
+const handleSave = async () => {
+  const { loading, error, fetchData } = useFetch(url.value, {
+    method: requestMethod.value,
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
@@ -89,22 +97,6 @@ const handleSaveChanges = async () => {
   formLoading.value = loading.value
   emit('save')
 };
-
-const handleSaveNew = async () => {
-  const { data, loading, error, fetchData } = useFetch(`${baseURL}/staff`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8'
-    },
-    body: JSON.stringify({...form.value})
-  })
-  formLoading.value = loading.value
-  await fetchData()
-  formLoading.value = loading.value
-  emit('save')
-};
-
-const handleSave = props.officer ? handleSaveChanges : handleSaveNew
 
 </script>
 
