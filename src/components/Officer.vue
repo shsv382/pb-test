@@ -61,7 +61,9 @@ const closeDialog = () => {
   position: absolute;
   bottom: 1em;
   right: 1em;
-	background: linear-gradient(45deg, #0a0a2f, #6876f3);
+  width: 1em;
+  height: 1em;
+	background: linear-gradient(45deg, rgb(40, 101, 161), rgb(121, 187, 255));
   &:hover {
     cursor: pointer;
   }

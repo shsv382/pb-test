@@ -164,6 +164,6 @@ onMounted(async () => {
 }
 
 .icon {
-	background: linear-gradient(45deg, #0a0a2f, #6876f3);
+	background: linear-gradient(45deg, rgb(40, 101, 161), rgb(121, 187, 255));
 }
 </style>

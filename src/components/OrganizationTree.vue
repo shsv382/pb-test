@@ -18,11 +18,11 @@
     </template> 
     <template v-if="organization.children?.length">
       <OrganizationTree
-        v-for="division in organization.children" 
-        :organization="division"
-        :root="false"
-        :key="division.id" 
-        :index="division.id.toString()" 
+      v-for="division in organization.children" 
+      :organization="division"
+      :root="false"
+      :key="division.id" 
+      :index="division.id.toString()" 
       />
     </template>
     <DivisionEditDialog
@@ -60,7 +60,7 @@ const closeDialog = () => {
 };
 
 const handleSave = async () => {
-  closeDialog()
+  // closeDialog()
   await getOrganization()
 }
 
@@ -75,7 +75,7 @@ const handleSave = async () => {
 <style lang="scss" scoped>
 @import '../styles/icons';
 .icon-edit {
-	background: linear-gradient(45deg, #0a0a2f, #6876f3);
+	background: linear-gradient(45deg, rgb(40, 101, 161), rgb(121, 187, 255));
   width: 1em;
   height: 1em;
 }

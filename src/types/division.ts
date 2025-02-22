@@ -3,7 +3,7 @@ export interface IDivisionRAW {
     name: string;
     acronym?: string;
     childrenID?: number[];
-    parentID: number;
+    parentID?: number;
 }
 
 export interface IDivision extends IDivisionRAW {
