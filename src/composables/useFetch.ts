@@ -9,7 +9,12 @@ export function useFetch(url: string, options={}) {
     loading.value = true
     try {
       const response = await fetch(url, options)
-      data.value = await response.json()
+      const value = await response.json()
+      if (value.error) {
+        error.value = value.error
+      } else {
+        data.value = value
+      }
     } catch (err) {
       error.value = err
     } finally {
