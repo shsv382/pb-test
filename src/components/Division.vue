@@ -5,13 +5,15 @@
 		</div>
 	</template>
 	<template v-else>
-		<h1 class="division__header" v-if="currentDivision.data">
-			{{ currentDivision.data.name }}         
-			<div class="division__edit-btn">
-          		<i @click="openDivisionDialog" class="icon-edit" ></i>
-        	</div>
-		</h1>
-		<h1 v-else>Не найдено такого подразделения</h1>
+		<template v-if="currentDivision.data">
+			<el-text tag="h1" class="division__header">
+				{{ currentDivision.data.name }}         
+				<div class="division__edit-btn">
+					  <i @click="openDivisionDialog" class="icon-edit" ></i>
+				</div>
+			</el-text>
+		</template>
+		<el-text tag="h1" class="division__header" v-else>Не найдено такого подразделения</el-text>
 
 		<DivisionEditDialog
 			:visible="divisionDialogVisible"
@@ -27,7 +29,7 @@
 		</template>
 		<div v-else class="division__summary">
 			<div v-if="divisionChief" class="division__chief">
-				<h2 class="officer__chief">Руководитель подразделения</h2>
+				<el-text tag="h2" class="division__chief-officer">Руководитель подразделения</el-text>
 				<Officer :officer="divisionChief" />
 			</div>
 			<div class="division__stats">
@@ -162,6 +164,18 @@ onMounted(async () => {
 	margin-bottom: 1em;
 	gap: 0.5em;
 	align-items: center;
+	font-size: 2em;
+}
+
+.division__chief {
+	display: flex; 
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.division__chief-officer {
+	font-size: 1.6em;
+	text-align: left;
 }
 
 .division__summary, .division__staff {

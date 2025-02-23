@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1 class="org-structure__header">Организационная структура</h1>
+  <div class="org-structure">
+    <el-text tag="h2" class="org-structure__header">Организационная структура</el-text>
 
     <el-input 
       class="org-structure__filter" 
@@ -63,7 +63,22 @@ onMounted(orgStore.getOrganization)
 </script>
 
 <style lang="scss" scoped>
+.org-structure {
+  min-height: 100vh;
+  background-color: white;
+  z-index: 9990;
+  padding-right: 40px;
+  @media (max-width: 560px) {
+    position: fixed;
+    min-width: 100vw;
+  }
+}
+
 .org-structure__header, .org-structure__filter {
   margin-bottom: 1em;
+}
+
+.org-structure__header {
+  font-size: 1.6em;
 }
 </style>
