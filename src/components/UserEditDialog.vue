@@ -40,8 +40,9 @@
   
 	  <template #footer>
 		<span class="dialog-footer">
-		  <el-button @click="handleClose">Отмена</el-button>
-		  <el-button type="primary" @click="handleSave">{{formLoading ? 'Загрузка' : 'Сохранить'}}</el-button>
+			<div v-show="formError" class="dialog__error-message">{{ formError }}</div>
+		  	<el-button @click="handleClose">Отмена</el-button>
+		  	<el-button type="primary" @click="handleSave">{{formLoading ? 'Загрузка' : 'Сохранить'}}</el-button>
 		</span>
 	  </template>
 	</el-dialog>
@@ -72,6 +73,8 @@ const form = ref({
 
 const formLoading = ref<boolean>(false)
 
+const formError = ref<any>(null)
+
 const handleClose = () => {
   emit('update:visible', false); 
 };
@@ -94,8 +97,11 @@ const handleSave = async () => {
   })
   formLoading.value = loading.value
   await fetchData()
+  formError.value = error.value
   formLoading.value = loading.value
-  emit('save')
+  if (!formError.value) {
+	  emit('save')
+  }
 };
 
 </script>
@@ -104,5 +110,13 @@ const handleSave = async () => {
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
+}
+
+.dialog__error-message {
+	color: red;
+	justify-self: flex-start;
+	margin: auto;
+	max-width: 40%;
+	text-align: left;
 }
 </style>
