@@ -66,7 +66,6 @@ onMounted(orgStore.getOrganization)
 .org-structure {
   min-height: 100vh;
   background-color: white;
-  z-index: 9990;
   padding-right: 40px;
   @media (max-width: 560px) {
     position: fixed;
