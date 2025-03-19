@@ -20,7 +20,8 @@
 </template>
 
 <style scoped lang="scss">
-.home, ul {
+.home {
+  width: 100%;
   display: grid;
   place-items: center;
   gap: 1em;
