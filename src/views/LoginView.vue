@@ -4,6 +4,7 @@
       <Logo />
       <LoginForm />
       <div class="login-form__bottom">
+        <a style="color: #257AD7" href="/about">Приветствие</a>
         <Button title="Зарегистрироваться" :style="'secondary'"></Button>
         <p>
           Copyright 2021 辽宁未来生物科技有限公司
@@ -45,6 +46,7 @@ import Button from '../components/UI/Button.vue'
   max-width: 480px;
   @media (min-width: 481px) {
     padding: 50px;
+    margin-right: 5%;
     justify-content: center;
     gap: 80px;
     height: unset;
