@@ -14,11 +14,4 @@ import OrgStructure from './components/OrgStructure.vue'
   margin: 0;
   box-sizing: border-box;
 }
-
-.main {
-  display: grid;
-  gap: 20px;
-  padding: 30px 30px;
-  width: 100%;
-}
 </style>

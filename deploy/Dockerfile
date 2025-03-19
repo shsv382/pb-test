@@ -8,4 +8,4 @@ WORKDIR /usr/share/nginx/html
 
 COPY . ./
 
-EXPOSE 5050
+EXPOSE 3003

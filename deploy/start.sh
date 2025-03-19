@@ -1,3 +1,3 @@
 #!/bin/bash
-docker build -t service-structure .
-docker run -d --name service-structure -p 5050:5050 -v "$(pwd):/usr/share/nginx/html" service-structure
+docker build -t pb-test .
+docker run -d --name pb-test -p 3003:3003 -v "$(pwd):/usr/share/nginx/html" pb-test
